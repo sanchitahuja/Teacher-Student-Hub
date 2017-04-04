@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html ng-app="BatchApp">
+<head>
+    <title>UserPage</title>
+    <link rel="stylesheet" href="/StyleSheet/UserpageStyle.css">
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.32/angular.js"></script>-->
+
+</head>
+<body background="/Images/userpagebackground.jpg" ng-controller="MainController">
+
+
+<!--header -->
+<header class="Header">
+    <h1>TEACHER ACCOUNT</h1>
+    <div class="signout">
+        <a ng-model="Signout" class="Signout" href="/signout" align="right";>SIGN-OUT</a>
+    </div>
+</header>
+
+<ul>
+    <li><a ng-model="Home" class="active" href="#home">Home</a></li>
+    <li><a ng-model="Batch" href="#batch">Make a new Batch/Subject</a></li>
+    <li><a ng-model="Attendance" href="#attendance">Mark Attendance</a></li>
+    <li><a ng-model="Marksheet" href="#marksheet">Add Marksheet</a></li>
+    <li><a ng-model="Portal" href="#Portal">Portal</a></li>
+</ul>
+
+
+<div class="Body">
+
+    <h2>Create New Batch</h2>
+
+    <input ng-model="BatchName"type="text" placeholder="Enter Batch Name" name="BatchName" required>
+
+    <button ng-click="createbatch()" type="submit">Add Batch</button>
+
+    <div ng-show="batchcreated">
+
+        <input ng-model="StudentName"type="text" placeholder="Enter Student Name" name="StudentName" required>
+        <input ng-model="Rollno"type="text" placeholder="Enter Roll no" name="StudentName" required>
+        <button ng-click="addstudent()" type="submit">Add Student</button>
+        <button ng-click="addBatchdata()" type="submit">Create batch</button>
+    </div>
+
+    <h1 ng-show="batchDone">BATCH DATA SUCCESFULLY INSERTED</h1>
+
+
+
+
+
+
+
+
+
+</div>
+
+</body>
+</html>

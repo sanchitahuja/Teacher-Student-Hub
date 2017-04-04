@@ -1,0 +1,67 @@
+<!Doctype html>
+  <html ng-app="StartApp">
+    <head>
+		<title>Student Teacher Interaction</title>
+		<link rel="stylesheet" href="/stylesheet/firstpageStyle.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.32/angular.js"></script>
+        <script type="text/javascript" src="/JS/StartPage.js"></script>
+       
+	<body ng-controller="MainController">
+
+           <div class='headercontainer'>
+                      <div id="top">
+                      	<h3 id = "logo">
+                      		 <h1 id="heading">STUDENT TEACHER INTERACTION</h1>
+                      	</h3>
+                      </div>
+      				  <div class='header'>
+                       
+					  </div>
+			</div>
+
+			<div class='left'>
+                      
+       <img id="image" src="/Images/images.jpg" >
+
+			         </div>
+</div>
+		    <div class='right'>
+		    	
+               	<div class="container">
+       	<div class="username" >
+    <label ><b>Username</b></label>
+    <input ng-model="UserName"type="text" placeholder="Enter Username" name="UserName" required>
+</div>
+<div class="password">
+    <label id="password"><b>Password</b></label>
+    <input ng-model="Password" type="password" placeholder="Enter Password" name="Password" required>
+   </div>
+<div class="loginbtn">
+	
+    <button ng-click="postme()" type="submit">Login</button>
+ 
+</div>
+    <div>
+    <input type="checkbox" checked="checked"> <b>Remember me</b>
+</div>
+
+<div class="psw">
+    CREATE A NEW  <a href="/Register">ACCOUNT</a>
+  </div>
+
+		 
+</div>
+</div>
+            <div class = 'footercontainer'>
+
+					     <div class='footer'>
+                               footer
+					    </div>
+			</div>
+
+			
+
+		</body>
+    </html>
+
+

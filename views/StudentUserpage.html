@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>UserPage</title>
+   <link rel="stylesheet" href="/home/sanchit/Desktop/Student-Teacher-Hub/StyleSheet/UserpageStyle.css">
+</head>
+<body background="/Images/userpagebackground.jpg" ng-controller="MainController">
+<!--header -->
+ <header class="Header">
+    <h1>STUDENT ACCOUNT</h1>
+    <div class="signout">
+     <a class="Signout"  href="/signout" align="right";>SIGN-OUT</a>
+     </div>
+  </header>
+  
+<ul>
+  <li><a class="active" href="#home">Home</a></li>
+  <li><a href="#batch">Add Teacher</a></li>
+  <li><a href="#attendance">View Attendance</a></li>
+  <li><a href="#marksheet">View Marksheet</a></li>
+   <li><a href="#Portal">PORTAL</a></li> 
+</ul>
+
+
+<div class="Body" >    
+
+<img class="ProfilePic" src=<%=ImgURL%> height="200px" width="200px" align="center" border="5">
+<div class="UserContents">
+    <h2>USER NAME :</h2>
+    <h3><%=UserName%></h3><br>
+    <h2>Unique ID :</h2>
+    <h3><%=UniqueID%></h3><br>
+    <h2>E-Mail :</h2>
+    <h3><%=Email%></h3><br>
+    <h2>CONTACT NO. :</h2>
+    <h3><%=Contact%></h3>
+    <h2>DATE OF BIRTH:</h2>
+    <h3><%=DOB%></h3>
+</div>
+
+
+
+
+
+
+</div>
+
+</body>
+</html>

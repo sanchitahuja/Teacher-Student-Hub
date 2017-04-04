@@ -1,0 +1,122 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+h1{
+    font-family: sans-serif;
+}
+body{
+     margin-top: 0%;
+    padding: 0%;
+    height: 100%;
+     background-repeat: no-repeat;
+    
+}
+.UniqueId{
+margin-left: 25%;
+margin-top: 10%;
+
+
+}
+select{
+    margin-top: 1%;
+    margin-left: 25%;
+}
+
+
+ul {
+     list-style-type: none;
+     position: fixed;
+    margin: 0;
+    padding: 0;
+    width: 18%;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+   
+    
+}
+
+.Header{
+    position: fixed;
+    margin-left:18%;
+    width:100%;
+    margin-top: 0%;
+    height: 10%;
+    padding: 10px; 
+      background-color: #ccffb3;
+}
+
+.signout a{
+    margin-left: 67%;
+     display: block;
+    width: 10%;
+    background-color: #4CAF50;
+    padding: 8px 10px;
+    font-size: 20px;
+    text-decoration: none;
+    color: azure;
+    text-align: center
+    
+}
+.signout a:hover{
+     display: block;
+    background-color: #4CAF50;
+    color: black;
+}
+
+li a {
+    
+    display: block;
+    color: #000;
+    font-display: block;
+    padding: 8px 10px;
+    font-size: 20px;
+    text-decoration: none;
+    
+   
+}
+li a.active {
+     display: block;
+    background-color: #4CAF50;
+    color: white;
+}
+
+li a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+      display: block;
+}
+
+
+.ProfilePic {
+    margin-left: 30%;
+    margin-top:10%;
+     margin-bottom:2%;
+    border: 10px;
+    border-style: solid;
+    border-color: #b3ff66;
+}
+
+.UserContents{
+    padding: 10px;
+    margin: 10px;
+}
+h2 {
+    text-transform:uppercase;
+    text-decoration-color: #1a1a1a;
+    font-family: sans-serif;
+    margin-bottom: 9px;
+    
+}
+
+
+
+
+
+
+
+
+
+

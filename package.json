@@ -1,0 +1,23 @@
+{
+  "name": "node-js-app",
+  "version": "1.0.0",
+  "description": "Node js app",
+  "main": "main.js",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "connect-redis": "^3.2.0",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.6",
+    "express": "^4.15.2",
+    "json-parser": "^1.1.5",
+    "mysql": "^2.13.0",
+    "redis": "file:node_modules\\redis",
+    "shortid": "^2.2.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

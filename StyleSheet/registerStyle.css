@@ -1,0 +1,59 @@
+body{
+    height: 100%;
+    margin: 0%;
+    padding: 0%;
+    background-clip: border-box;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    background: url("/Images/registerBackground.jpg");
+}
+input.ng-invalid {
+    background-color: pink;
+}
+input.ng-valid {
+    background-color: lightgreen;
+}
+.RegistrationForm{
+    background-color: #33ff33;
+    width: 30%;
+    height: 25%;
+    margin-top: 1%;
+  margin-left: 35%;
+    margin-bottom: 4%;
+    padding: 10px;
+    border-radius: 15px;
+    
+}
+
+h2{
+    font-family: sans-serif;
+    text-decoration-color: black;
+    font-style: strong;
+    text-decoration-style: solid;
+    text-decoration: underline;
+    margin-bottom: 8px;
+ 
+}
+.requiredfield{
+    margin-top: inherit;
+     font-style: oblique;
+}
+input{
+   height: 25px;
+    width: 70%;
+    border-style: groove;
+    border-radius:5px;
+}
+select{
+    height: 25px;
+    width: 200px;
+    margin-bottom: 20px;
+    border-style: groove;
+}
+.CreateBtn{
+    height: 30px;
+     margin-bottom: 20px;
+    border-style: groove;
+    background-color: #88ff4d;
+    color: aliceblue;
+}
