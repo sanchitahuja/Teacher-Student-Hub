@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html ng-app="AttendanceApp">
+<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.32/angular.js"></script>
+    <title>UserPage</title>
+    <link rel="stylesheet" href="/StyleSheet/MarkAttendance.css">
+
+</head>
+<body background="/Images/userpagebackground.jpg" ng-controller="MainController">
+
+
+<script src="/JS/MarkAttendance.js"></script>
+
+<!--header -->
+<header class="Header">
+    <h1>TEACHER ACCOUNT</h1>
+    <div class="signout">
+        <a ng-model="Signout" class="Signout" href="/signout" align="right";>SIGN-OUT</a>
+    </div>
+</header>
+
+<ul>
+    <li><a ng-model="Home" class="active" href="#home">Home</a></li>
+    <li><a ng-model="Batch" href="#batch">Make a new Batch/Subject</a></li>
+    <li><a ng-model="Attendance" href="#attendance">Mark Attendance</a></li>
+    <li><a ng-model="Marksheet" href="#marksheet">Add Marksheet</a></li>
+    <li><a ng-model="Portal" href="#Portal">Portal</a></li>
+</ul>
+
+
+<div class="Body">
+    <h2 id="chooseBatch">Choose Batch to mark Attendance</h2>
+
+    <select ng-model="selectedbatch" id="selectedbatch" placeholder="Choose Batch" required>
+       <%for(var i=0;i<BatchList.length;i++){%>
+        <option name= "<%=BatchList[i].BatchName%>"><%=BatchList[i].BatchName%> </option>
+        <% } %>
+    </select>
+    <h2>Select the Date</h2>
+    <input ng-model="date" type="date">
+<Button type="button" ng-click="getList()"  required>MARK ATTENDANCE</Button>
+    <div >
+    <table id="AttendanceTable">
+        <tr>
+    <th>Student ID</th>
+    <th>Student Name</th>
+    <th>MARK</th>
+     </tr>
+    </table>
+
+        <Button type="button" ng-show="sendData"ng-click="sendlist()"  required>SAVE THE ATTENDANCE</Button>
+
+
+    </div>
+
+</div>
+
+</body>
+</html>

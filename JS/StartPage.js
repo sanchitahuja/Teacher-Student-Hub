@@ -11,11 +11,12 @@ var MainController = function ($scope, $http, $window) {
     $scope.postme = function () {
        var httpreq= $http({
             method: "post",
-            url: "/TeacherLogin",
+            url: "/Login",
             headers : { 'Content-Type': 'application/json' } ,
             data: {
-                UserName: $scope.UserName,
-                Password: $scope.Password
+                UserName: $scope.UserName.trim(),
+                Password: $scope.Password,
+                selectedstate:$scope.selectedstate
             }
         });
         httpreq.then(function(successresponse)

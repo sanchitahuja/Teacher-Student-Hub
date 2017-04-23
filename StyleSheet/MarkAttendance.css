@@ -1,27 +1,29 @@
 * {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 h1{
     font-family: sans-serif;
 }
 body{
-     margin-top: 0%;
+    margin-top: 0%;
     padding: 0%;
     height: 100%;
-     background-repeat: no-repeat;
-    
+    background-repeat: no-repeat;
+
 }
 
 .Body{
 
     margin-left:25%;
     padding:1px 16px;
-   
-}
 
+}
+#chooseBatch{
+    margin-top: 5%;
+}
 ul {
-     list-style-type: none;
+    list-style-type: none;
     margin: 0;
     padding: 0;
     width: 18%;
@@ -29,8 +31,8 @@ ul {
     position: fixed;
     height: 100%;
     overflow: auto;
-   
-    
+
+
 }
 
 .Header{
@@ -39,13 +41,13 @@ ul {
     width:100%;
     margin-top: 0%;
     height: 10%;
-    padding: 10px; 
-      background-color: #ccffb3;
+    padding: 10px;
+    background-color: #ccffb3;
 }
 
 .signout a{
     margin-left: 67%;
-     display: block;
+    display: block;
     width: 10%;
     background-color: #4CAF50;
     padding: 8px 10px;
@@ -53,27 +55,27 @@ ul {
     text-decoration: none;
     color: azure;
     text-align: center
-    
+
 }
 .signout a:hover{
-     display: block;
+    display: block;
     background-color: #4CAF50;
     color: black;
 }
 
 li a {
-    
+
     display: block;
     color: #000;
     font-display: block;
     padding: 8px 10px;
     font-size: 20px;
     text-decoration: none;
-    
-   
+
+
 }
 li a.active {
-     display: block;
+    display: block;
     background-color: #4CAF50;
     color: white;
 }
@@ -81,17 +83,7 @@ li a.active {
 li a:hover:not(.active) {
     background-color: #555;
     color: white;
-      display: block;
-}
-
-
-.ProfilePic {
-    margin-left: 30%;
-    margin-top:10%;
-     margin-bottom:2%;
-    border: 10px;
-    border-style: solid;
-    border-color: #b3ff66;
+    display: block;
 }
 
 .UserContents{
@@ -103,13 +95,8 @@ h2 {
     text-decoration-color: #1a1a1a;
     font-family: sans-serif;
     margin-bottom: 9px;
-    
-}
-#createBatch{
-    margin-top: 5%;
 
 }
-
 
 
 

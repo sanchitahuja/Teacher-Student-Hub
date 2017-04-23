@@ -1,9 +1,11 @@
 var express = require('express');
 var Router = express.Router();
 var mysql = require('mysql');
+var BatchRoutes=require('./BatchRoutes.js');
 var cookiesession = require('cookie-session');
 // var cookieParser=require('cookie-parser');
 var bodyparser = require('body-parser');
+Router.use('/Batch',BatchRoutes);
 Router.use(cookiesession({
     cookieName: 'session',
     keys: ['hello']
@@ -64,14 +66,18 @@ Router.get('/redirect',function(req,res){
 
         });
         console.log("datadetials "+JSON.stringify(datadetails));
+        if(req.session.type==="Teacher")
         res.render('TeacherUserpage',datadetails);
+        else if(req.session.type==="Teacher")
+            res.render('StudentUserpage',datadetails);
+        else
+            res.sendStatus(404);
+
    }
    else{ console.log("Session is dead");
         res.render('my');
 
    }
-
-
 });
 
 var pool = mysql.createPool({
@@ -93,47 +99,89 @@ Router.post('/', urlencodeParser, function (req, res) {
         pool.getConnection(function (err, con) {
             if(err)
             console.log(err);
-            else
-            {
-            con.query("SELECT * from TeacherUUID where teacherUsername   =? AND teacherPass =? ",
-                [postdata.UserName, postdata.Password], function (err, results, rows){
-                    if (err)
-                        console.log(err);
-                    else
-                    {
-                        if (results.length === 0) {
-                            console.log("Not found username");
-                            console.log(rows);
-                            res.setHeader('Content-Type', 'application/json');
-                            res.send(JSON.stringify({ "Exist": "No","URL":"/" }));
-                        }
-                        else{
-                            console.log("username found");
-                            console.log("post data username "+postdata.UserName);
-                            console.log("Sql username "+results[0].teacherUsername);
-                            if (results[0].teacherUsername=== postdata.UserName) {
-                                console.log("condition verified");
-                                console.log("row "+results[0].teacherUsername);
+            else {
+                if (postdata.selectedstate === "Teacher") {
+                    con.query("SELECT * from TeacherUUID where teacherUsername   =? AND teacherPass =? ",
+                        [postdata.UserName, postdata.Password], function (err, results, rows) {
+                            if (err)
+                                console.log(err);
+                            else {
+                                if (results.length === 0) {
+                                    console.log("Not found username");
+                                    console.log(rows);
+                                    res.setHeader('Content-Type', 'application/json');
+                                    res.send(JSON.stringify({"Exist": "No", "URL": "/"}));
+                                }
+                                else {
+                                    console.log("username found");
+                                    console.log("post data username " + postdata.UserName);
+                                    console.log("Sql username " + results[0].teacherUsername);
+                                    if (results[0].teacherUsername === postdata.UserName) {
+                                        console.log("condition verified");
+                                        console.log("row " + results[0].teacherUsername);
+                                        req.session.type = "Teacher";
+                                        req.session.userid = results[0].teacherUsername;
+                                        res.status(200);
+                                        console.log("Status sent");
+                                        res.send(JSON.stringify({"Exist": "Yes", "URL": "/Login/redirect"}));
+                                        console.log("data sent to Angular JSON DATA SENT " + JSON.stringify({
+                                                "Exist": "Yes",
+                                                "URL": "/Login/redirect"
+                                            }));
+                                    }
+                                    else {
+                                        console.log("Condition Failed");
+                                    }
 
-                                // req.session.pass = results[0].teacherPass;
-                                req.session.pass = results[0].teacherPass;
-                                req.session.userid = results[0].teacherUsername;
-                                res.status(200);
-                                console.log("Status sent");
-                                res.send(JSON.stringify({ "Exist": "Yes","URL":"/TeacherLogin/redirect" }));
-                                console.log("data sent to Angular JSON DATA SENT "+JSON.stringify({ "Exist": "Yes","URL":"/TeacherLogin/redirect" }));
+                                }
                             }
-                            else
-                            {
-                                console.log("Condition Failed");
+
+
+                        });
+                }
+                else if(postdata.selectedstate==="Student"){
+                    con.query("SELECT * from StudentUUID where studentUsername   =? AND studentPass =? ",
+                        [postdata.UserName, postdata.Password], function (err, results, rows) {
+                            if (err)
+                                console.log(err);
+                            else {
+                                if (results.length === 0) {
+                                    console.log("Not found username");
+                                    console.log(rows);
+                                    res.setHeader('Content-Type', 'application/json');
+                                    res.send(JSON.stringify({"Exist": "No", "URL": "/"}));
+                                }
+                                else {
+                                    console.log("username found");
+                                    console.log("post data username " + postdata.UserName);
+                                    console.log("Sql username " + results[0].studentUsername);
+                                    if (results[0].teacherUsername === postdata.UserName) {
+                                        console.log("condition verified");
+                                        console.log("row " + results[0].studentUsername);
+                                        req.session.type = "Student";
+                                        req.session.userid = results[0].studentUsername;
+                                        res.status(200);
+                                        console.log("Status sent");
+                                        res.send(JSON.stringify({"Exist": "Yes", "URL": "/Login/redirect"}));
+                                        console.log("data sent to Angular JSON DATA SENT " + JSON.stringify({
+                                                "Exist": "Yes",
+                                                "URL": "/Login/redirect"
+                                            }));
+                                    }
+                                    else {
+                                        console.log("Condition Failed");
+                                    }
+
+                                }
                             }
 
-                        }
-                    }
+
+                        });
+
+                }
 
 
-                });}
-
+            }
 
         });
     }

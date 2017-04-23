@@ -4,8 +4,9 @@ var bodyparser=require('body-parser');
 var urlencodeParser=bodyparser.urlencoded({extended:true});
 var app=express();
 var sql=require('mysql');
- var TeacherRoutes=require(__dirname+'/Routes/MainRoutes.js');
+ var MainRoutes=require(__dirname+'/Routes/MainRoutes.js');
  var RegisterRoutes=require(__dirname+'/Routes/RegisterRoutes.js');
+ var AttendanceRoutes=require(__dirname+'/Routes/AttendanceRoutes.js');
 //   var StudentRoutes=require('./Routes/StudentRoutes');
 app.use(bodyparser.json());
 app.use(urlencodeParser);
@@ -22,8 +23,9 @@ app.get('/signout',function (req,res) {
     res.render('my');
 
 })
-app.use('/TeacherLogin',TeacherRoutes);
+app.use('/Login',MainRoutes);
 app.use('/Register',RegisterRoutes);
+app.use('/Attendance',AttendanceRoutes);
 app.get('/',function(req,res){
 res.render('my');
 console.log('Request Url: '+req.url);

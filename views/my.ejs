@@ -35,7 +35,11 @@
 <div class="password">
     <label id="password"><b>Password</b></label>
     <input ng-model="Password" type="password" placeholder="Enter Password" name="Password" required>
-   </div>
+    <select ng-model="selectedstate" id="selectedstate" required>
+        <option name="Teacher">Teacher</option>
+        <option name="Student">Student</option>
+    </select>
+</div>
 <div class="loginbtn">
 	
     <button ng-click="postme()" type="submit">Login</button>
