@@ -68,7 +68,7 @@ Router.get('/redirect',function(req,res){
         console.log("datadetials "+JSON.stringify(datadetails));
         if(req.session.type==="Teacher")
         res.render('TeacherUserpage',datadetails);
-        else if(req.session.type==="Teacher")
+        else if(req.session.type==="Student")
             res.render('StudentUserpage',datadetails);
         else
             res.sendStatus(404);
@@ -140,6 +140,8 @@ Router.post('/', urlencodeParser, function (req, res) {
                         });
                 }
                 else if(postdata.selectedstate==="Student"){
+                    console.log("In Stuent verification")
+                    console.log("postdata "+postdata);
                     con.query("SELECT * from StudentUUID where studentUsername   =? AND studentPass =? ",
                         [postdata.UserName, postdata.Password], function (err, results, rows) {
                             if (err)
@@ -155,7 +157,7 @@ Router.post('/', urlencodeParser, function (req, res) {
                                     console.log("username found");
                                     console.log("post data username " + postdata.UserName);
                                     console.log("Sql username " + results[0].studentUsername);
-                                    if (results[0].teacherUsername === postdata.UserName) {
+                                    if (results[0].studentUsername === postdata.UserName) {
                                         console.log("condition verified");
                                         console.log("row " + results[0].studentUsername);
                                         req.session.type = "Student";

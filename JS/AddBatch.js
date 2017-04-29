@@ -9,8 +9,8 @@ var MainController=function ($scope,$http,$window) {
     var studentArr=[];
     var studentobj=function(name,rollno)
     {
-        this.StudentID=rollno;
-        this.StudentName=name;
+        this.StudentID=rollno.toUpperCase().trim();
+        this.StudentName=name.toUpperCase().trim();
         
 
     }

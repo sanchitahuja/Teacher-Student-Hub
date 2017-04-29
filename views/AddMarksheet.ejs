@@ -7,9 +7,7 @@
 
 </head>
 <body background="/Images/userpagebackground.jpg" >
-
-
-<script src="/JS/MarkAttendance.js"></script>
+<script src="/JS/MarkSheet.js"></script>
 
 <!--header -->
 <header class="Header">
@@ -32,23 +30,18 @@
     <h2 id="chooseBatch">Choose Batch to mark Attendance</h2>
 
     <select id="selectedbatch" placeholder="Choose Batch" required>
-       <%for(var i=0;i<BatchList.length;i++){%>
+        <%for(var i=0;i<BatchList.length;i++){%>
         <option value= "<%=BatchList[i].BatchName%>"><%=BatchList[i].BatchName%> </option>
         <% } %>
     </select>
-    <h2>Select the Date</h2>
-    <input  id="date" type="date">
-<Button type="button" id="markAttendancebtn" required>MARK ATTENDANCE</Button>
+    <h2 >Add MarkSheet Title</h2>
+    <input id="MarksheetTitle" type="text" maxlength="10" required>
+    <Button type="button" id="makemarksheetbtn" required>ADD MARKSHEET</Button>
     <div >
-    <table id="AttendanceTable">
-        <tr>
-    <th>Student ID</th>
-    <th>Student Name</th>
-    <th>MARK</th>
-     </tr>
-    </table>
+        <table id="MarksTable">
+        </table>
 
-        <Button id="saveAttendancebtn" type="button" required>SAVE THE ATTENDANCE</Button>
+        <Button id="saveMarksbtn" type="button" required>SAVE MARKS</Button>
 
 
     </div>

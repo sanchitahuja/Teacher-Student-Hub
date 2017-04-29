@@ -26,9 +26,9 @@ var addBatchList=function (BatchName,BatchID) {
 };
 
 Router.get('/',function (req,res) {
-    if(req.session!==null)
+    if(req.session)
     {
-
+            console.log("Request to /Attendance");
         pool.getConnection(function (err,conn) {
             if(err)
                 console.log(err);
@@ -56,17 +56,24 @@ Router.get('/',function (req,res) {
     }
 
 });
+
+
+
 Router.post('/getAttendancedata',urlencodeParser,function (req,res) {
-    if(req.session) {
+    if(req.session&&req.session.userid) {
+        console.log("Request to /Attendance/getAttendancedata");
         if (!req.body) {
             res.send(JSON.stringify({'status': 'nothing'}));
             console.log("Body is empty");
         }
         else {
+
             pool.getConnection(function (err,conn) {
                 if(err)
                     console.log(err);
-               conn.query("Select StudentID,StudentName from firstbatchbatch ",function (err,results,fields) {
+                var query="Select StudentID,StudentName from "+req.body.BatchName.trim()+"batch ";
+                console.log("query "+query);
+               conn.query(query,function (err,results,fields) {
                    if(err)
                        console.log(err);
                    console.log(results);
@@ -89,7 +96,7 @@ Router.post('/getAttendancedata',urlencodeParser,function (req,res) {
 });
 
 Router.post('/mark',urlencodeParser,function (req,res) {
-    if(req.session!==null)
+    if(req.session)
     {
         if(!req.body){
             console.log("Body is null");
@@ -99,57 +106,73 @@ Router.post('/mark',urlencodeParser,function (req,res) {
             var arr=req.body.Arr;
             console.log(arr);
             pool.getConnection(function (err,con) {
-                con.query("Create table "+ req.session.userid + req.data.BatchName + "Attendance  if not exists as Select StudentID from "+req.BatchName+";",
-                    function (err,results,fields) {
+                // var q="CREATE OR REPLACE VIEW source_data AS SELECT StudentID FROM "+req.body.BatchName.trim()+"batch ;"
+                // +"Create TABLE IF NOT EXITS "+req.session.userid.trim()+req.body.BatchName.trim()+"Attendance LIKE source_data;"
+                // +"Insert into "+req.session.userid.trim()+req.body.BatchName.trim()+"Attendance Select StudentID from source_data;";
+                var q=" CREATE TABLE IF NOT EXISTS "+req.session.userid.trim()+req.body.BatchName.trim()+"Attendance(StudentID varchar(10) PRIMARY KEY);";
+                con.query(q,function (err,results,fields) {
                         if(err){
                             console.log(err);
-                            res.send(JSON.stringify({'status':'server err'}));
+                            // res.send(JSON.stringify({'status':'server err'}));
                         }
-
-                    }
-                );
-                    con.query("show columns from "+req.session.userid+req.data.BatchName+"Attendance where Field=?",req.data.Date,
+                    con.query("SELECT * FROM "+req.session.userid.trim()+req.body.BatchName.trim()+"Attendance;",function (err,results,fileds) {
+                        if(err)
+                            console.log(err);
+                        if(results.length===0){
+                            con.query("Insert into "+req.session.userid.trim()+req.body.BatchName.trim()+"Attendance (StudentID) Select StudentID from "+req.body.BatchName.trim()+"batch;"
+                                ,function (err,results,fields) {
+                                    console.log(err);
+                                }
+                            );}
+                    });
+                    con.query("show columns from "+req.session.userid+req.body.BatchName.trim()+"Attendance where Field=?",req.body.Date,
                         function (err,results,fields) {
                             if(err)
                             {
-                                res.send(JSON.stringify({'status':'server err'}));
+                                // res.send(JSON.stringify({'status':'server err'}));
                                 console.log(err);
                             }
                             else {
-                                if (results.length > 0) {
+                                if (results!==null&&results.length > 0) {
+                                    console.log("MARKED");
                                     res.send(JSON.stringify({'status': 'marked'}));
                                     console.log(err);
                                 }
                                 else {
-                                    var date = String.valueOf(req.data.date);
-                                    con.query("ALTER TABLE " + req.session.userid + req.data.BatchName + "Attendance ADD ? char(1) DEFAULT '0'", date,
+
+                                    console.log("NOT MARKED");
+                                    var date = req.body.Date;
+                                    console.log("date "+date);
+                                    con.query("ALTER TABLE " + req.session.userid.trim() + req.body.BatchName.trim() + "Attendance ADD `"+date.trim()+"` char(1) DEFAULT '0'; ",
                                         function (err, results, fields) {
-                                            if(err)
-                                            {
-                                                res.send(JSON.stringify({'status':'server err'}));
-                                                console.log(err);
-                                            }
-                                            else {
-
-
-                                                var id = String.valueOf(req.body.date);
-                                                var setdata = {date: '1'};
-                                                for (var i = 0; i < req.data.Arr.length; i++) {
-                                                    con.query("Insert into " + req.session.userid + req.data.BatchName + "Attendance set ? where StudentID=?", [setdata,req.body.Arr[i]],
-                                                        function (err,results,fields) {
-                                                            res.send(JSON.stringify({'status':'server err'}));
-                                                            console.log(err);
-                                                        });
-
-                                                }
-                                                res.send(JSON.stringify({'status':'done'}));
+                                            console.log(err);
+                                            console.log("Inside Alter Table");
+                                            var id =(req.body.Date);
+                                            // var setdata = {id: '1'};
+                                            // console.log("setdata "+setdata);
+                                            for (var i = 0; i < req.body.Arr.length; i++) {
+                                                console.log("In loop od insertion arr "+req.body.Arr[i]);
+                                                con.query("Update " + req.session.userid.trim() + req.body.BatchName.trim() +"Attendance set `"+id+"`='1' where StudentID=?", req.body.Arr[i].StudentID,
+                                                    function (err,results,fields) {
+                                                        // res.send(JSON.stringify({'status':'server err'}));
+                                                        console.log(err);
+                                                    });
 
                                             }
+                                            console.log("Status sent");
+                                            res.send(JSON.stringify({'status':'done'}));
+
+
                                         });
 
                                 }
                             }
                         });
+
+
+                    }
+                );
+
 
 
             });
@@ -211,8 +234,8 @@ Router.post('/TeacherviewAttendance',urlencodeParser,function (req,res) {
 Router.post('/Studentviewattendance/data',urlencodeParser,function (req,res) {
    if(req.session){
        if(req.body){
-        var batch=req.data.BatchName;
-        var Teacher=req.data.TeacherName;
+        var batch=req.body.BatchName;
+        var Teacher=req.body.TeacherName;
         pool.getConnection(function (err,con) {
           con.query("Select teacherUsername from teacherUUID where teacherUUID=?;",req.body.data.UUID,function (err,results,fields) {
               if(err){
