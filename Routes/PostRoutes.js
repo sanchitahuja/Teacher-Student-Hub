@@ -56,4 +56,4 @@ Router.post('/CreatePost',urlencodeParser,function (req,res) {
        Router.render('my');
    }
 });
-Router.post('/comment',urlencodeParser,)
+

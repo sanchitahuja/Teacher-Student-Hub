@@ -17,12 +17,20 @@ var pool = mysql.createPool({
     password: "root",
     database: "std_database"
 });
-
-Router.post('/addTeacher',urlencodeParser,function (req,res){
+Router.get('/addTeacher',urlencodeParser,function (req,res) {
+    if(req.session&&req.session.userid&&req.session.type==="Student") {
+        res.render('StudentAddTeacher');
+    }
+    else{
+        req.session=null;
+        res.render('my');
+    }
+});
+Router.post('/addTeacherData',urlencodeParser,function (req,res){
     if(req.session&&req.session.userid&&req.session.type==="Student") {
         var teacherid=req.body.Teacherid.trim();
-        var batch=req.body.BatchName.trim();
-        if(batch&&teacherid){
+        // var batch=req.body.BatchName.trim();
+        if(teacherid){
             var teacherUsername="";
             pool.getConnection(function (err,con) {
                 con.query("Select teacherUsername from teacheruuid where teacherUUID=?",teacherid,function (err,results,fields) {
@@ -71,7 +79,7 @@ Router.post('/addBatch',urlencodeParser,function (req,res) {
                 };
                 if(err)
                     console.log(err);
-                con.query("CREATE TABLE "+req.session.userid+"TeacherList (Tusername varchar(50),BatchName varchar(50),PRIMARY KEY(Tusername,BatchName));",function (err,results,fields) {
+                con.query("CREATE TABLE IF NOT EXISTS "+req.session.userid+"TeacherList (Tusername varchar(50),BatchName varchar(50),PRIMARY KEY(Tusername,BatchName));",function (err,results,fields) {
                    if(err)
                        console.log(err);
                     con.query("SELECT * from "+req.session.userid+"TeacherList where BatchName=? AND Tusername=?",[BatchName,teacherUsername],function (err,results,fields) {
@@ -83,6 +91,9 @@ Router.post('/addBatch',urlencodeParser,function (req,res) {
                                     console.log(err);
                                 res.send(JSON.stringify({"status": "done"}));
                             });
+                        }
+                        else{
+                            res.send(JSON.stringify({"status": "exists"}));
                         }
                     });
 
@@ -96,18 +107,79 @@ Router.post('/addBatch',urlencodeParser,function (req,res) {
         res.render('my');
     }
 });
-
+Router.get('/viewAttendance',urlencodeParser,function(req,res){
+    if(req.session&&req.session.type==="Student"){
+        res.render('StudentViewAttendance');
+    }
+    else{
+        req.session=null;
+        res.render('my');
+    }
+});
+Router.get('/getTeachers',urlencodeParser,function(req,res){
+    if(req.session&&req.session.type==="Student"){
+        var teacher=[];
+        pool.getConnection(function (err,con) {
+           con.query("SELECT DISTINCT(Tusername) FROM "+req.session.userid+"TeacherList;",function (err,results,fields) {
+               if(err)
+                   console.log(err);
+               if(!results&&results.length<0)
+               {
+                   res.send(JSON.stringify({"status":"notdone"}));
+               }
+               else{
+                   var i=0;
+                   for(i=0;i<results.length;i++)
+                    teacher.push(results[i].Tusername);
+                   if(i===results.length)
+                   res.send(JSON.stringify({"status":"done","teacher":teacher}));
+               }
+           });
+        });
+    }
+    else{
+        req.session=null;
+        res.render('my');
+    }
+});
+Router.post('/getBatch',urlencodeParser,function(req,res){
+    if(req.session&&req.session.type==="Student"&&req.body){
+        var Tusername=req.body.Teacher.trim();
+        var batch=[];
+        pool.getConnection(function (err,con) {
+            con.query("SELECT BatchName FROM "+req.session.userid+"TeacherList where Tusername=?;",Tusername,function (err,results,fields) {
+                if(err)
+                    console.log(err);
+                if(!results&&results.length<0)
+                {
+                    res.send(JSON.stringify({"status":"notdone"}));
+                }
+                else{
+                    var i=0;
+                    for(i=0;i<results.length;i++)
+                        batch.push(results[i].BatchName);
+                    if(i===results.length)
+                        res.send(JSON.stringify({"status":"done","batch":batch}));
+                }
+            });
+        });
+    }
+    else{
+        req.session=null;
+        res.render('my');
+    }
+});
 Router.post('/viewAttendanceData',urlencodeParser,function (req,res) {
     if(req.session&&req.session.userid&&req.body){
 
         var TeacherName =req.body.TeacherName.trim();
         var BatchName =req.body.BatchName.trim();
-        var id =req.body.ID;
-        if(id&&name){
+        var id =req.body.ID.trim();
+        if(id){
             pool.getConnection(function (err,con) {
                 if(err)
                     console.log(err);
-                con.query("Select * from "+TeacherName+BatchName+"attendance where StudentID='?'",id,function (err,results,fields) {
+                con.query("Select * from "+TeacherName+BatchName+"attendance where StudentID=?",id,function (err,results,fields) {
                    if(err)
                        console.log(err);
                     if(results.length<=0)
@@ -125,6 +197,7 @@ Router.post('/viewAttendanceData',urlencodeParser,function (req,res) {
                                 present++;
                             Arr.push({"Date":fields[i].name,"P":results[0][fields[i].name]});
                         }
+                        console.log(Arr);
                         res.send(JSON.stringify({"status":"done","Arr":Arr,"total":total,"present":present}));
                     }
                 });
@@ -137,30 +210,74 @@ Router.post('/viewAttendanceData',urlencodeParser,function (req,res) {
         res.render('my');
     }
 });
-Router.post('/viewMarksheetData',urlencodeParser,function (req,res) {
-    if(req.session&&req.session.userid){
-           if(req.body){
-               var TeacherName =req.body.TeacherName.trim();
-               var BatchName =req.body.BatchName.trim();
-               var MarksheetTitle=req.body.Marksheettitle.trim();
-               if(TeacherName&&BatchName&&MarksheetTitle){
-                   
-               }
-           }
-    }
-    else{
-        req.session=null;
-        res.render('my');
-    }
+Router.get('/viewMarksheet',urlencodeParser,function (req,res) {
+   if(req.session&&req.session.userid&&req.session.type=="Student"){
+       res.render('StudentViewMarksheet');
+   }
+    else{req.session=null;
+       res.render('my');}
 });
+Router.post('/getMarksheet',urlencodeParser,function (req,res) {
+    console.log("Request to getmarksheet");
+    if(req.session&&req.session.userid&&req.session.type==="Student") {
+        pool.getConnection(function (err, con) {
+            console.log(err);
+
+            con.query("show columns from " + req.body.BatchName.trim() + "Mark where Field LIKE '" + req.body.TeacherName.trim() + "%';", function (err, results, fields) {
+                if (err)
+                    console.log(err);
+                var marklist = [];
+                if (results.length <= 0) {
+                    res.send(JSON.stringify({"status": "notdone"}));
+                }
+                else {
+                    var i;
+                    for (i = 0; i < results.length; i++) {
+                        var r=results[i].Field;
+                        var u=req.session.userid.trim();
+                        var s=r.replace(u, " ");
+                        console.log(s);
+                        marklist.push(s);
+                    }
+                    res.send(JSON.stringify({"status": "done", "marklist": marklist}));
+                }
+            });
+
+        });
+    }});
+        Router.post('/viewMarksheetData', urlencodeParser, function (req, res) {
+            if (req.session && req.session.userid) {
+                if (req.body) {
+                    var TeacherName = req.body.TeacherName.trim();
+                    var BatchName = req.body.BatchName.trim();
+                    var StudentID = req.body.StudentID.trim();
+                    var MarksheetTitle = req.body.Marksheettitle.trim();
+                    if (TeacherName && BatchName && MarksheetTitle) {
+                        pool.getConnection(function (err, con) {
+                            console.log("markstitle "+MarksheetTitle);
+                            var q="SELECT " + TeacherName + MarksheetTitle + " from " + BatchName + "Mark where StudentID='" + StudentID + "';";
+                            console.log(q);
+                            con.query(q, function (err, results, fields) {
+                                if (err)
+                                    console.log(err);
+                                if (results <= 0)
+                                    res.send(JSON.stringify({"status": "notdone"}));
+                                res.send(JSON.stringify({
+                                    "status": "done",
+                                    "marks": results[0][TeacherName + MarksheetTitle]
+                                }));
+                            });
+                        });
+                    }
+                }
+            }
+            else {
+                req.session = null;
+                res.render('my');
+            }
+        });
 
 
+        module.exports = Router;
 
-
-
-
-
-
-
-
-module.exports=Router;
+    

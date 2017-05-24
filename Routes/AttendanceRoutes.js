@@ -26,7 +26,7 @@ var addBatchList=function (BatchName,BatchID) {
 };
 
 Router.get('/',function (req,res) {
-    if(req.session)
+    if(req.session&&req.session.userid&&req.session.type==="Teacher")
     {
             console.log("Request to /Attendance");
         pool.getConnection(function (err,conn) {
@@ -184,77 +184,52 @@ Router.post('/mark',urlencodeParser,function (req,res) {
     }
 
 });
-Router.post('/TeacherviewAttendance',urlencodeParser,function (req,res) {
-   if(req.session){
-       if(req.body){
-           var batchname=req.body.batchName;
-           pool.getConnection(function (err,con) {
-               if(err){
-                   res.send(JSON.stringify({"status":"Error"}));
-                   console.log(err);
-               }
-               else{
-                   var obj=[];
-                   con.query("Select * from "+req.session.userid+batchname+"Attendance;",function (err,results,fields) {
-                       if(err)
-                           console.log(err);
-                      if(results.length>0)
-                      {
-                          var attendanceArr=[];
-
-                          for(var j=0;j<results.length;j++){
-                              var item={};
-                              for(var i=0;i<fields.length;i++){
-                                  item[fields[i].name]=results[j][fields[i].name];
-                              }
-                              attendanceArr.push(item);
-                          }
-                          res.send(JSON.stringify(attendanceArr))
-                      }
-                       else{
-                          res.send(JSON.stringify({"status":"!exist"}));
-                      }
-                   });
-               }
-                   
-               
-               
-           })
-       }
-       else{
-
-           console.log('Body is null');
-       }
-   } 
-    else{
-       console.log('session is dead');
-       res.render('my');
-   }
-});
-Router.post('/Studentviewattendance/data',urlencodeParser,function (req,res) {
-   if(req.session){
-       if(req.body){
-        var batch=req.body.BatchName;
-        var Teacher=req.body.TeacherName;
-        pool.getConnection(function (err,con) {
-          con.query("Select teacherUsername from teacherUUID where teacherUUID=?;",req.body.data.UUID,function (err,results,fields) {
-              if(err){
-                  res.send(JSON.stringify({"status":"Error"}));
-                  console.log(err);
-              }
-              else{
-                  
-              }
-          });
-        }); 
-       }
-       else{
-           console.log("Body is null");
-       }
-   } 
-    else{
-       res.render('my');   
-   }
-});
-
+// Router.post('/TeacherviewAttendance',urlencodeParser,function (req,res) {
+//    if(req.session){
+//        if(req.body){
+//            var batchname=req.body.batchName;
+//            pool.getConnection(function (err,con) {
+//                if(err){
+//                    res.send(JSON.stringify({"status":"Error"}));
+//                    console.log(err);
+//                }
+//                else{
+//                    var obj=[];
+//                    con.query("Select * from "+req.session.userid+batchname+"Attendance;",function (err,results,fields) {
+//                        if(err)
+//                            console.log(err);
+//                       if(results.length>0)
+//                       {
+//                           var attendanceArr=[];
+//
+//                           for(var j=0;j<results.length;j++){
+//                               var item={};
+//                               for(var i=0;i<fields.length;i++){
+//                                   item[fields[i].name]=results[j][fields[i].name];
+//                               }
+//                               attendanceArr.push(item);
+//                           }
+//                           res.send(JSON.stringify(attendanceArr))
+//                       }
+//                        else{
+//                           res.send(JSON.stringify({"status":"!exist"}));
+//                       }
+//                    });
+//                }
+//                   
+//               
+//               
+//            })
+//        }
+//        else{
+//
+//            console.log('Body is null');
+//        }
+//    } 
+//     else{
+//        console.log('session is dead');
+//        res.render('my');
+//    }
+// });
+//
 module.exports=Router;

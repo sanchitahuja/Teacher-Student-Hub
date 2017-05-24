@@ -25,9 +25,9 @@ $('#makemarksheetbtn').click(function () {
                 alert("status "+response.status);
 
                 // length=response.data.length;
-                if(response!==null&&response.status.trim()==="done"&&response.data) {
+                if(response!==null&&response.status.trim()==="done"&&response.Arr) {
                     var table = "<tr><th>STUDENT ID</th><th>STUDENT NAME</th><th>ADD MARKS</th></tr>";
-                    for (var i = 0; i < response.data.length; i++) {
+                    for (var i = 0; i < response.Arr.length; i++) {
                         table += "<tr> <td>"
                             + response.data[i].StudentID.toUpperCase()
                             + "</td>"
@@ -39,7 +39,7 @@ $('#makemarksheetbtn').click(function () {
                             + "</td>"
                             + "</tr>";
                     }
-                    document.getElementById("MarksTable").innerHTML = (table);
+                    document.getElementById("MarksTable").innerHTML = table;
                     if (table !== "")
                         $("#saveMarksbtn").slideDown(200);
                     $("#selectedbatch").prop("disabled", true);
